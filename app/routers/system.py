@@ -43,6 +43,9 @@ def get_system_stats(
     online_users = crud.count_online_users(db, 24)
     realtime_bandwidth_stats = realtime_bandwidth()
 
+    # مقدار مصرف کاربران برای ادمین
+    admin_usage = dbadmin.users_usage if dbadmin else 0
+
     return SystemStats(
         version=__version__,
         mem_total=mem.total,
@@ -56,8 +59,8 @@ def get_system_stats(
         users_expired=users_expired,
         users_limited=users_limited,
         users_on_hold=users_on_hold,
-        incoming_bandwidth=system.uplink,
-        outgoing_bandwidth=system.downlink,
+        incoming_bandwidth=admin_usage,  # مقدار ورودی برابر با مصرف ادمین
+        outgoing_bandwidth=0,  # مقدار خروجی صفر است
         incoming_bandwidth_speed=realtime_bandwidth_stats.incoming_bytes,
         outgoing_bandwidth_speed=realtime_bandwidth_stats.outgoing_bytes,
     )
